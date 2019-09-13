@@ -4,7 +4,7 @@ env PYTHONBUFFERED 1
 
 
 workdir /hb
-run wget https://github.com/bfincher/html_browser/tarball/master -O /tmp/hb.tgz && \
+run wget https://github.com/bfincher/html_browser/tarball/separate_docker -O /tmp/hb.tgz && \
     tar -zxf /tmp/hb.tgz -C /hb --strip-components=1 && \
     rm -rf /hb/apache && \
     apk add --no-cache py3-pillow nginx && \
