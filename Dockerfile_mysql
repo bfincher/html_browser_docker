@@ -1,4 +1,4 @@
-from bfincher/html_browser:alpine-sqlite_d
+from bfincher/html_browser:alpine-sqlite
 
 env PYTHONBUFFERED 1
 
