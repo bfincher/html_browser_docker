@@ -1,7 +1,4 @@
 dist: xenial
-language: python
-python:
-  - "3.6.8"
 services:
   - docker
 
@@ -14,9 +11,9 @@ install:
   - sudo chown -R $USER /config
   - sudo apt-get update
   - sudo apt-get install -y coreutils
-  - UID=$(id -u)
-  - GID=$(id -g)
-  - docker run -d -p 8000:80 -v /config:/config -v /:/data1 -e USERID=$UID -e GROUPID=$GID -e USERNAME=hb_user -e GROUPNAME=hb_group -e HOMEDIR=/hb --name html_browser html_browser
+  - TRAVIS_UID=$(id -u)
+  - TRAVIS_GID=$(id -g)
+  - docker run -d -p 8000:80 -v /config:/config -v /:/data1 -e USERID=$TRAVIS_UID -e GROUPID=$TRAVIS_GID -e USERNAME=hb_user -e GROUPNAME=hb_group -e HOMEDIR=/hb --name html_browser html_browser
   - docker ps -a
 
 script: 
