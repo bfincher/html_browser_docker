@@ -12,6 +12,8 @@ install:
   - sudo mkdir /config
   - sudo mkdir -p /config/logs/hb
   - sudo chown -R $USER /config
+  - sudo apt-get update
+  - sudo apt-get install -y coreutils
   - UID=$(id -u)
   - GID=$(id -g)
   - docker run -d -p 8000:80 -v /config:/config -v /:/data1 -e USERID=$UID -e GROUPID=$GID -e USERNAME=hb_user -e GROUPNAME=hb_group -e HOMEDIR=/hb --name html_browser html_browser
