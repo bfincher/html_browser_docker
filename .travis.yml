@@ -12,7 +12,9 @@ install:
   - sudo mkdir /config
   - sudo mkdir -p /config/logs/hb
   - sudo chown -R $USER /config
-  - docker run -d -p 8000:80 -v /config:/config -v /:/data1 -e USERID=1010 -e GROUPID=1010 -e USERNAME=hb_user -e GROUPNAME=hb_group -e HOMEDIR=/hb --name html_browser html_browser
+  - UID=$(id -u)
+  - GID=$(id -g)
+  - docker run -d -p 8000:80 -v /config:/config -v /:/data1 -e USERID=$UID -e GROUPID=$GID -e USERNAME=hb_user -e GROUPNAME=hb_group -e HOMEDIR=/hb --name html_browser html_browser
   - docker ps -a
 
 script: 
