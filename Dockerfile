@@ -1,13 +1,15 @@
 from bfincher/alpine-python3:3.10
 
 env PYTHONBUFFERED 1
+arg BRANCH
 
 
 workdir /hb
-run wget https://github.com/bfincher/html_browser/tarball/master -O /tmp/hb.tgz && \
+run wget https://github.com/bfincher/html_browser/tarball/${BRANCH} -O /tmp/hb.tgz && \
     tar -zxf /tmp/hb.tgz -C /hb --strip-components=1 && \
     rm -rf /hb/apache && \
     apk add --no-cache py3-pillow nginx && \
+    apk add --no-cache --virtual .git git && \
     grep -v Pillow requirements.txt | pip install --no-cache -r /dev/stdin && \
     pip install --no-cache gunicorn==19.9.0 && \
     rm /etc/nginx/conf.d/default.conf && \
@@ -18,7 +20,8 @@ run wget https://github.com/bfincher/html_browser/tarball/master -O /tmp/hb.tgz 
         -exec rm -rf '{}' + \
     && apk add --virtual .rundeps $runDeps && \
     cp /hb/html_browser/local_settings/local_settings_docker_sqlite.py /hb/html_browser/local_settings/local_settings.py && \
-    cp /hb/html_browser/local_settings/local_settings_docker_sqlite.json /hb/html_browser/local_settings/local_settings.json
+    cp /hb/html_browser/local_settings/local_settings_docker_sqlite.json /hb/html_browser/local_settings/local_settings.json && \
+    apk del .git
 
 copy root/ /
 
