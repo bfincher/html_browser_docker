@@ -1,4 +1,4 @@
-from bfincher/alpine-python3:3.10
+from bfincher/alpine-python3:3.11
 
 env PYTHONBUFFERED 1
 arg BRANCH
@@ -11,7 +11,7 @@ run wget https://github.com/bfincher/html_browser/tarball/${BRANCH} -O /tmp/hb.t
     apk add --no-cache py3-pillow nginx && \
     apk add --no-cache --virtual .git git && \
     grep -v Pillow requirements.txt | pip install --no-cache -r /dev/stdin && \
-    pip install --no-cache gunicorn==19.9.0 && \
+    pip install --no-cache gunicorn==20.0.4 && \
     rm /etc/nginx/conf.d/default.conf && \
     mkdir -p /run/nginx && \
     find /usr/local \
