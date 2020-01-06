@@ -5,7 +5,8 @@ arg BRANCH
 
 
 workdir /hb
-run wget https://github.com/bfincher/html_browser/tarball/${BRANCH} -O /tmp/hb.tgz && \
+run wget https://github.com/bfincher/html_browser/tarball/${BRANCH} -O /tmp/hb.tgz || \
+    wget https://github.com/bfincher/html_browser/tarball/master -O /tmp/hb.tgz && \
     tar -zxf /tmp/hb.tgz -C /hb --strip-components=1 && \
     rm -rf /hb/apache && \
     apk add --no-cache py3-pillow nginx && \
