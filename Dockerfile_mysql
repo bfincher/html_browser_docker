@@ -11,17 +11,16 @@ run apk add --no-cache mariadb-client mariadb-connector-c && \
     find /usr/local \
         \( -type d -a -name test -o -name tests \) \
         -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
-        -exec rm -rf '{}' + \
-    && runDeps="$( \
+        -exec rm -rf '{}' + && \
+    runDeps="$( \
         scanelf --needed --nobanner --recursive /usr/local \
                 | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
                 | sort -u \
                 | xargs -r apk info --installed \
                 | sort -u \
-    )" \
-    && apk add --virtual .rundeps $runDeps && \
-    cp /hb/html_browser/local_settings/local_settings_docker_mysql.py /hb/html_browser/local_settings/local_settings.py && \
-    cp /hb/html_browser/local_settings/local_settings_docker_mysql.json /hb/html_browser/local_settings/local_settings.json && \
+    )" && \
+    apk add --virtual .rundeps $runDeps && \
+    cp /hb/html_browser/docker_mysql.env /hb/html_browser/.env && \
     cp /empty.sh /init_db.sh
 
 ENV DB_USER="db_user"
