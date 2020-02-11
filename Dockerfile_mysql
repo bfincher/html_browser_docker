@@ -20,7 +20,7 @@ run apk add --no-cache mariadb-client mariadb-connector-c && \
                 | sort -u \
     )" && \
     apk add --virtual .rundeps $runDeps && \
-    cp /hb/html_browser/docker_mysql.env /hb/html_browser/.env && \
+    cp /hb/html_browser/docker_mysql.env /.env && \
     cp /empty.sh /init_db.sh
 
 ENV DB_USER="db_user"

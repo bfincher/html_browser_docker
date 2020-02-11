@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv sh
+set -e
+
+#while true; do date; sleep 1; done
+
+wget https://github.com/bfincher/html_browser/tarball/${BRANCH} -O /tmp/hb.tgz || \
+wget https://github.com/bfincher/html_browser/tarball/master -O /tmp/hb.tgz
+
+tar -zxf /tmp/hb.tgz -C /hb --strip-components=1
+rm /tmp/hb.tgz
+rm -rf /hb/apache
+
+cd /hb
+grep -v Pillow requirements.txt | pip install --no-cache -r /dev/stdin
+cp /.env /hb/html_browser

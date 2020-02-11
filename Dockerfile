@@ -5,14 +5,9 @@ arg BRANCH
 
 
 workdir /hb
-run wget https://github.com/bfincher/html_browser/tarball/${BRANCH} -O /tmp/hb.tgz || \
-    wget https://github.com/bfincher/html_browser/tarball/master -O /tmp/hb.tgz && \
-    tar -zxf /tmp/hb.tgz -C /hb --strip-components=1 && \
-    rm /tmp/hb.tgz && \
-    rm -rf /hb/apache && \
+run mkdir -p /hb/html_browser && \
     apk add --no-cache py3-pillow nginx && \
     apk add --no-cache --virtual .git git && \
-    grep -v Pillow requirements.txt | pip install --no-cache -r /dev/stdin && \
     pip install --no-cache gunicorn==20.0.4 && \
     rm /etc/nginx/conf.d/default.conf && \
     mkdir -p /run/nginx && \
@@ -21,7 +16,6 @@ run wget https://github.com/bfincher/html_browser/tarball/${BRANCH} -O /tmp/hb.t
         -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
         -exec rm -rf '{}' + && \
     apk add --virtual .rundeps $runDeps && \
-    cp /hb/html_browser/docker_sqlite.env /hb/html_browser/.env && \
     apk del .git
 
 copy root/ /
