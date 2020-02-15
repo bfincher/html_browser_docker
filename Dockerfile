@@ -6,8 +6,7 @@ arg BRANCH
 
 workdir /hb
 run mkdir -p /hb/html_browser && \
-    apk add --no-cache py3-pillow nginx && \
-    apk add --no-cache --virtual .git git && \
+    apk add --no-cache py3-pillow nginx git && \
     pip install --no-cache gunicorn==20.0.4 && \
     rm /etc/nginx/conf.d/default.conf && \
     mkdir -p /run/nginx && \
@@ -16,7 +15,7 @@ run mkdir -p /hb/html_browser && \
         -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
         -exec rm -rf '{}' + && \
     apk add --virtual .rundeps $runDeps && \
-    apk del .git
+    cp /hb/html_browser/cygwin.env /.env
 
 copy root/ /
 
