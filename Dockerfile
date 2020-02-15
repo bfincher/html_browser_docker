@@ -14,8 +14,8 @@ run mkdir -p /hb/html_browser && \
         \( -type d -a -name test -o -name tests \) \
         -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
         -exec rm -rf '{}' + && \
-    apk add --virtual .rundeps $runDeps && \
-    cp /hb/html_browser/cygwin.env /.env
+    apk add --virtual .rundeps $runDeps
+
 
 copy root/ /
 

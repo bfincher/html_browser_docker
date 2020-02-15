@@ -12,4 +12,4 @@ rm -rf /hb/apache
 
 cd /hb
 grep -v Pillow requirements.txt | pip install --no-cache -r /dev/stdin
-cp /.env /hb/html_browser
+cp /hb/html_browser/cygwin.env /hb/html_browser/.env

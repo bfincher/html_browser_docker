@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv sh
+set -e
+
+cp /hb/html_browser/docker_mysql.env /hb/html_browser/.env
