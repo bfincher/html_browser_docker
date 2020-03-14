@@ -1,4 +1,5 @@
-from bfincher/html_browser:alpine-sqlite
+ARG version
+from bfincher/html_browser:alpine-sqlite_${version}
 
 env PYTHONBUFFERED 1
 
