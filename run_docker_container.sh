@@ -15,6 +15,10 @@ else
     CONFIG=${THIS_DIR}/${container_name}_config
 fi
 
+version=$(cat version.txt)
+
+image_name=${image_name}_${version}
+
 if [ ! -d $CONFIG ]; then
     mkdir $CONFIG
 fi
