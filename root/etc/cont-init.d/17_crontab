@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv sh
+set -e
+
+CRON_CMD="cd /hb/ && bash -l -c 'python3 manage.py thumbnail cleanup > /dev/null'"
+
+CRON_PERIOD="0 0 * * *"
+
+#wait for the user to show up in the crontab
+while ( [ ! -f /etc/crontabs/$USERNAME ])
+do 
+    echo "waiting for user file to be created in /etc/crontabs"
+    sleep 1 
+done
+
+(crontab -u $USERNAME -l ; echo "${CRON_PERIOD}   ${CRON_CMD}") | sort - | uniq - | crontab -u $USERNAME -
