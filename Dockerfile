@@ -20,9 +20,9 @@ run wget https://github.com/bfincher/html_browser/tarball/${BRANCH} -O /tmp/hb.t
         \( -type d -a -name test -o -name tests \) \
         -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
         -exec rm -rf '{}' + && \
-    apk add --virtual .rundeps $runDeps && \
     cp /hb/html_browser/docker_sqlite.env /hb/html_browser/.env && \
-    apk del .git
+    apk del .git && \
+    rm -rf /var/cache/apk/*
 
 copy root/ /
 
