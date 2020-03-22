@@ -6,10 +6,16 @@ CRON_CMD="cd /hb/ && bash -l -c 'python3 manage.py thumbnail cleanup > /dev/null
 CRON_PERIOD="0 0 * * *"
 
 #wait for the user to show up in the crontab
-while ( [ ! -f /etc/crontabs/$USERNAME ])
+count=0
+while ( [ ! -f /etc/crontabs/$USERNAME ] && [[ "$count" -le 5 ]] )
 do 
-    echo "waiting for user file to be created in /etc/crontabs"
+    echo "waiting for user file to be created in /etc/crontab.  Count = $count"
     sleep 1 
+    count=$((count+1))
 done
+
+if  [ ! -f /etc/crontabs/$USERNAME ]; then
+    mkdir /etc/crontabs/$USERNAME
+fi
 
 (crontab -u $USERNAME -l ; echo "${CRON_PERIOD}   ${CRON_CMD}") | sort - | uniq - | crontab -u $USERNAME -
