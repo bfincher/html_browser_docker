@@ -7,9 +7,8 @@ arg BRANCH
 workdir /hb
 run echo "branch = ${BRANCH}" && \
     wget https://github.com/bfincher/html_browser/tarball/${BRANCH} -O /tmp/hb.tgz || \
-    echo "unable to download https://github.com/bfincher/html_browser/tarball/${BRANCH}"
-
-run tar -zxf /tmp/hb.tgz -C /hb --strip-components=1 && \
+    wget https://github.com/bfincher/html_browser/tarball/master -O /tmp/hb.tgz && \
+    tar -zxf /tmp/hb.tgz -C /hb --strip-components=1 && \
     rm /tmp/hb.tgz && \
     rm -rf /hb/apache && \
     apk add --no-cache py3-pillow nginx && \
