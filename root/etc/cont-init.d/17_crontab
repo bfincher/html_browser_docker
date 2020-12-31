@@ -15,7 +15,9 @@ do
 done
 
 if  [ ! -f /etc/crontabs/$USERNAME ]; then
-    mkdir /etc/crontabs/$USERNAME
+    touch /etc/crontabs/$USERNAME
+    chown $USERNAME:$USERNAME /etc/crontabs/$USERNAME
+    chmod 644 /etc/crontabs/$USERNAME
 fi
 
 (crontab -u $USERNAME -l ; echo "${CRON_PERIOD}   ${CRON_CMD}") | sort - | uniq - | crontab -u $USERNAME -
