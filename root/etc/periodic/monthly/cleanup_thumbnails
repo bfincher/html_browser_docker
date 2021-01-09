@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv sh
+
+LOGDIR=/config/logs/hb
+
+su $USERNAME -c "cd /hb/ && bash -l -c 'python3 manage.py thumbnail cleanup >> $LOGDIR/thumb_cleanup.log'"
