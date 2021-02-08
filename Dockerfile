@@ -11,12 +11,10 @@ run echo "branch = ${BRANCH}" && \
     tar -zxf /tmp/hb.tgz -C /hb --strip-components=1 && \
     rm /tmp/hb.tgz && \
     rm -rf /hb/apache && \
-    apk add --no-cache py3-pillow nginx && \
+    apk add --no-cache py3-pillow && \
     apk add --no-cache --virtual .git git && \
     grep -v Pillow requirements.txt | pip install --no-cache -r /dev/stdin && \
     pip install --no-cache gunicorn==20.0.4 && \
-    rm /etc/nginx/conf.d/default.conf && \
-    mkdir -p /run/nginx && \
     find /usr/local \
         \( -type d -a -name test -o -name tests \) \
         -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
