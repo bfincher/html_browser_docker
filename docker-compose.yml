@@ -9,7 +9,8 @@ services:
         environment:
             - MYSQL_ROOT_PASSWORD=root_pass
         networks:
-            - hb_net
+            - backend
+        restart: unless-stopped
 
     nginx:
         image: nginx:alpine
@@ -23,6 +24,8 @@ services:
             - django
         networks:
             - hb_net
+            - backend
+        restart: unless-stopped
 
     django:
         image: bfincher/html_browser:alpine-mysql_3.0.0
@@ -40,7 +43,8 @@ services:
         depends_on:
             - db
         networks:
-            - hb_net
+            - backend
+        restart: unless-stopped
 
 volumes:
     hbmedia:
@@ -48,3 +52,4 @@ volumes:
 networks:
     hb_net:
         external: true
+    backend:
