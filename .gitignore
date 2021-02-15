@@ -1,4 +1,6 @@
+config
 db_data
+data1
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
