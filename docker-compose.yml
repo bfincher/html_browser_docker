@@ -3,11 +3,14 @@ version: "3.3"
 services:
     db:
         image: mariadb:10.5
-        hostname: db
+        hostname: ${DB_HOST}
         volumes:
-            - /home/bfincher/docker/html_browser/db_data:/var/lib/mysql
+            - ./db_data:/var/lib/mysql
         environment:
-            - MYSQL_ROOT_PASSWORD=root_pass
+            - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+            - MYSQL_DATABASE=${DB_NAME}
+            - MYSQL_USER=${DB_USER}
+            - MYSQL_PASSWORD=${DB_PASS}
         networks:
             - backend
         restart: unless-stopped
@@ -31,8 +34,8 @@ services:
         image: bfincher/html_browser:alpine-mysql_3.0.0
         hostname: htmlbrowser_django
         volumes:
-            - /home/bfincher/docker/html_browser/config:/config
-            - /Volumes/data1:/data1
+            - ./config:/config
+            - ./data1:/data1
             - hbmedia:/hb/media
         environment:
             - USERID=1012
@@ -40,6 +43,11 @@ services:
             - USERNAME=hb
             - GROUPNAME=hb
             - HOMEDIR=/hb 
+            - DB_USER=${DB_USER}
+            - DB_PASS=${DB_PASS}
+            - DB_ROOT_PASS=${DB_ROOT_PASS}
+            - DB_NAME=${DB_NAME}
+            - DB_HOST=${DB_HOST}
         depends_on:
             - db
         networks:
