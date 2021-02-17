@@ -26,12 +26,14 @@ services:
         depends_on:
             - django
         networks:
-            - hb_net
+            - frontend
             - backend
         restart: unless-stopped
+        environment:
+            - VIRTUAL_HOST=hb.userver.com
 
     django:
-        image: bfincher/html_browser:alpine-mysql_3.0.0
+        image: bfincher/html_browser:alpine-mysql_3.1.0
         hostname: htmlbrowser_django
         volumes:
             - ./config:/config
@@ -58,6 +60,6 @@ volumes:
     hbmedia:
 
 networks:
-    hb_net:
+    frontend:
         external: true
     backend:
