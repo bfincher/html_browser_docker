@@ -10,7 +10,6 @@ run echo "branch = ${BRANCH}" && \
     wget https://github.com/bfincher/html_browser/tarball/master -O /tmp/hb.tgz && \
     tar -zxf /tmp/hb.tgz -C /hb --strip-components=1 && \
     rm /tmp/hb.tgz && \
-    rm -rf /hb/apache && \
     apk add --no-cache py3-pillow && \
     apk add --no-cache --virtual .git git && \
     grep -v Pillow requirements.txt | pip install --no-cache -r /dev/stdin && \
