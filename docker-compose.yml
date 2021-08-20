@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
     db:
-        image: mariadb:10.5
+        image: mariadb:10.6
         hostname: ${DB_HOST}
         volumes:
             - ./db_data:/var/lib/mysql
