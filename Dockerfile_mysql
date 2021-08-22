@@ -13,7 +13,7 @@ run apk add --no-cache mariadb-client mariadb-connector-c && \
         \( -type d -a -name test -o -name tests \) \
         -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
         -exec rm -rf '{}' + && \
-    cp /hb/html_browser/docker_mysql.env /hb/html_browser/.env && \
+    cp /hb/docker_mysql.env /hb/.env && \
     cp /init_mysql_db.sh /init_db.sh
 
 ENV DB_USER="db_user"
