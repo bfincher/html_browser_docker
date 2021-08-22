@@ -18,7 +18,7 @@ run echo "branch = ${BRANCH}" && \
         \( -type d -a -name test -o -name tests \) \
         -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
         -exec rm -rf '{}' + && \
-    cp /hb/html_browser/docker_sqlite.env /hb/html_browser/.env && \
+    cp /hb/docker_sqlite.env /hb/.env && \
     apk del .git && \
     rm -rf /var/cache/apk/*
 
