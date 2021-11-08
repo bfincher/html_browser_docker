@@ -13,7 +13,7 @@ run echo "branch = ${BRANCH}" && \
     apk add --no-cache py3-pillow && \
     apk add --no-cache --virtual .git git && \
     grep -v Pillow requirements.txt | pip install --no-cache -r /dev/stdin && \
-    pip install --no-cache gunicorn==20.0.4 && \
+    pip install --no-cache gunicorn==20.1.0 && \
     find /usr/local \
         \( -type d -a -name test -o -name tests \) \
         -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
