@@ -11,15 +11,15 @@ run echo "branch = ${BRANCH}" && \
     tar -zxf /tmp/hb.tgz -C /hb --strip-components=1 && \
     rm /tmp/hb.tgz && \
     apk add --no-cache py3-pillow && \
-    apk add --no-cache --virtual .git git && \
+    apk add --no-cache --virtual .builddeps git gcc libc-dev linux-headers python3-dev && \
+    pip install --no-cache uwsgi && \
     grep -v Pillow requirements.txt | pip install --no-cache -r /dev/stdin && \
-    pip install --no-cache gunicorn==20.1.0 && \
     find /usr/local \
         \( -type d -a -name test -o -name tests \) \
         -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
         -exec rm -rf '{}' + && \
     cp /hb/docker_sqlite.env /hb/.env && \
-    apk del .git && \
+    apk del .builddeps && \
     rm -rf /var/cache/apk/*
 
 copy root/ /
