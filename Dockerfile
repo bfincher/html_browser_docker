@@ -12,7 +12,7 @@ run echo "branch = ${BRANCH}" && \
     rm /tmp/hb.tgz && \
     apk add --no-cache py3-pillow && \
     apk add --no-cache --virtual .builddeps git gcc libc-dev linux-headers python3-dev && \
-    pip install --no-cache uwsgi && \
+    pip install --no-cache uwsgi==2.0.20 && \
     grep -v Pillow requirements.txt | pip install --no-cache -r /dev/stdin && \
     find /usr/local \
         \( -type d -a -name test -o -name tests \) \
