@@ -15,7 +15,7 @@ else
     CONFIG=${THIS_DIR}/${container_name}_config
 fi
 
-version=$(cat version.txt)
+version=$(./getVersion.sh)
 
 image_name=${image_name}_${version}
 
