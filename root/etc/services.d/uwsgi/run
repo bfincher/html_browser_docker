@@ -8,4 +8,5 @@ uwsgi --chdir=/hb \
   --vacuum \
   --uid=$USERID --gid=$GROUPID \
   --buffer-size=32768 \
-  --max-requests=5000
+  --max-requests=5000 \
+  --processes=5
