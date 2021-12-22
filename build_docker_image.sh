@@ -3,7 +3,7 @@
 branch_name=$(git symbolic-ref -q HEAD)
 branch_name=${branch_name##refs/heads/}
 branch_name=${branch_name:-HEAD}
-version=$(cat version.txt)
+version=$(./getVersion.sh)
 
 image_name=bfincher/html_browser:alpine-sqlite_$version
 
