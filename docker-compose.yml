@@ -30,7 +30,7 @@ services:
             - backend
         restart: unless-stopped
         environment:
-            - VIRTUAL_HOST=hb.userver.com
+            - VIRTUAL_HOST=hb.fincherhome.com
 
     django:
         image: bfincher/html_browser:alpine-mysql_${VERSION}
