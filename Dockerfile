@@ -6,8 +6,8 @@ arg BRANCH
 
 workdir /hb
 run echo "branch = ${BRANCH}" && \
-    wget https://github.com/bfincher/html_browser/tarball/${BRANCH} -O /tmp/hb.tgz || \
-    wget https://github.com/bfincher/html_browser/tarball/master -O /tmp/hb.tgz && \
+    wget https://gitlab.com/bfincher/html_browser/-/archive/${BRANCH}/html_browser-${BRANCH}.tar.gz -O /tmp/hb.tgz || \
+    wget https://gitlab.com/bfincher/html_browser/-/archive/master/html_browser-master.tar.gz -O /tmp/hb.tgz && \
     tar -zxf /tmp/hb.tgz -C /hb --strip-components=1 && \
     rm /tmp/hb.tgz && \
     apk add --no-cache py3-pillow && \

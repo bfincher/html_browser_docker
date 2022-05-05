@@ -26,18 +26,19 @@ services:
         depends_on:
             - django
         networks:
-            - frontend
-            - backend
+            backend:
+            frontend:
+               ipv4_address: 172.18.0.105
         restart: unless-stopped
         environment:
-            - VIRTUAL_HOST=hb.fincherhome.com
+            - VIRTUAL_HOST=nexus.fincherhome.com/hb
 
     django:
         image: bfincher/html_browser:alpine-mysql_${VERSION}
         hostname: htmlbrowser_django
         volumes:
             - ./config:/config
-            - ./data1:/data1
+            - /Volumes/data1:/data1
             - hbmedia:/hb/media
         environment:
             - USERID=1012
