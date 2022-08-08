@@ -1,4 +1,4 @@
-from bfincher/alpine-python3:3.15
+from bfincher/alpine-python3:3.16
 
 env PYTHONBUFFERED 1
 arg BRANCH
