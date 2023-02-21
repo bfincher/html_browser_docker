@@ -9,24 +9,36 @@ DEFAULT_LISTEN_HOST = '0.0.0.0'
 DEFAULT_LISTEN_PORT = 5000
 DEFAULT_NGINX_CONFIG_FILE = '/etc/nginx/conf.d/default.conf'
 
-REGEX = re.compile(r'location download_([a-zA-Z_0-9-]+)\s+{')
+SHARE_NAME_REGEX = re.compile(r'location download_([ a-zA-Z_0-9-]+)\s+{')
+SHARE_LOCATION_REGEX = re.compile(r'root\s+(.*);')
+
+def loadConfig(config_file):
+    with open(config_file, 'r') as f:
+        lines = f.readlines()
+
+    shares = {}
+    for i in range(len(lines)):
+        line = lines[i].strip()
+        match = SHARE_NAME_REGEX.match(line)
+        if match:
+            share_name = match.group(1)
+            i += 1
+            line = lines[i].strip()
+            match = SHARE_LOCATION_REGEX.match(line)
+            shares[share_name] = match.group(1)
+        i += 1
+
+    return shares
 
 class DynamicUpdate:
     def __init__(self, listen_host, listen_port, nginx_config_file):
-        self.shares = []
+        self.shares = {}
         self.listen_host = listen_host
         self.listen_port = listen_port
         self.nginx_config_file = nginx_config_file
 
     def loadConfig(self):
-        with open(self.nginx_config_file, 'r') as f:
-            lines = f.readlines()
-
-        for line in lines:
-            line = line.strip()
-            match = REGEX.match(line)
-            if match:
-                self.shares.append(match.group(1))
+        loadConfig(self.nginx_config_file)
 
     def listen(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -44,9 +56,24 @@ class DynamicUpdate:
                         self.handle_new_share(data)
 
     def handle_new_share(self, dataStr):
+        data_changed = False
         data = pickle.loads(dataStr)
-        for item in data:
-            print(f'item = {item}')
+
+        for name, location in data.items():
+            if self.shares.has_key(name):
+                if location != self.shares[name]:
+                    self.shares[name] = location
+                    data_changed = True
+            else:
+                self.shares[name] = location
+                data_changed = True
+
+        if data_changed:
+            with open(self.nginx_config_file, 'w') as f:
+                for name, location in self.shares:
+                    f.write(f'location download_{} {\n')
+                    f.write(f'    root {location};\n')
+                    f.write('}\n\n')
 
 def create_instance_from_args(args = None):
     listen_host = DEFAULT_LISTEN_HOST

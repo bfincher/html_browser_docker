@@ -66,10 +66,12 @@ class DynamicUpdateTest(unittest.TestCase):
 
         when(scket).accept().thenReturn(('testIp', conn))
         when(scket).close().thenReturn(None)
-        when(scket).__enter__(...).thenReturn(None)
-        when(scket).__exit__(...).thenReturn(None)
+#        when(scket).__enter__().thenReturn(scket)
+#        when(scket).__exit__(...)
+        when(scket).setblocking = False
+        when(scket).fileno = 1
 
-        when(socket).socket(..., ...).thenReturn(lambda: socket_socket_func(scket))
+        when(socket).socket(...).thenReturn(lambda: socket_socket_func(scket))
 
     def tearDown(self):
         if os.path.exists(dest_config_file):
@@ -108,12 +110,16 @@ class DynamicUpdateTest(unittest.TestCase):
 
     def test(self):
         self.createMocks()
+
+        s = socket.socket('bla', 'bla')
+        print(type(s))
+
         instance = create_instance_from_args(['', '--nginx-config-file', dest_config_file])
         instance.loadConfig()
         t = Thread(target = instance.listen)
         t.start()
 
-        wait().at_most(100, SECOND).until(lambda: self.threads)
+        #wait().at_most(100, SECOND).until(lambda: len(self.threads) > 0)
 
 def test():
     data = [{'shareName': 'share3', 'location': 'test location 3'},
