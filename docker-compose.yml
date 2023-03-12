@@ -16,12 +16,14 @@ services:
         restart: unless-stopped
 
     nginx:
-        image: nginx:alpine
+        build:
+          context: .
+          dockerfile: nginx_Dockerfile
         hostname: htmlbrowser
         ports: 
             - 8000:80
         volumes:
-            - ./nginx.conf:/etc/nginx/conf.d/default.conf
+            - nginx_dynamic_config:/etc/nginx/conf.d/
             - hbmedia:/hbmedia
             - /Volumes/data1:/data1
         depends_on:
@@ -41,6 +43,7 @@ services:
             - ./config:/config
             - /Volumes/data1:/data1
             - hbmedia:/hb/media
+            - nginx_dynamic_config:/nginx__config
         environment:
             - USERID=1012
             - GROUPID=1012
@@ -60,6 +63,7 @@ services:
 
 volumes:
     hbmedia:
+    nginx_dynamic_config:
 
 networks:
     frontend:
