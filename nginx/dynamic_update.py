@@ -43,13 +43,15 @@ class DynamicUpdate:
         self.nginx_config_file= nginx_config_file
 
     def loadConfig(self):
-        loadConfig(self.nginx_config_file)
+        self.shares = loadConfig(self.nginx_config_file)
 
     def listen(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         address = (self.listen_host, self.listen_port)
         s.bind(address)
-        while True:
+        shouldContinue = True
+
+        while shouldContinue:
             s.listen()
             conn, addr = s.accept()
             print(f'Connected to {addr}')
@@ -57,16 +59,26 @@ class DynamicUpdate:
             with conn:
                 while True:
                     data = conn.recv(1024)
+                    if data == b'quit':
+                        print('Received quit command')
+                        shouldContinue = False
+                        break
+ 
                     if not data:
                         break
                     self.handle_new_share(data)
 
+        s.close()
+
     def handle_new_share(self, dataStr):
         data_changed = False
+        print(f'BKF dataStr = {dataStr}')
         data = pickle.loads(dataStr)
 
+        print(f'BKF type of data = {type(data)}')
+        print(f'BKF data = {data}')
         for name, location in data.items():
-            if self.shares.has_key(name):
+            if name in self.shares:
                 if location != self.shares[name]:
                     self.shares[name] = location
                     data_changed = True
@@ -77,7 +89,7 @@ class DynamicUpdate:
         if data_changed:
             tempFile = '/tmp/nginx_config'
             with open(self.nginx_config_file, 'r') as f:
-                origLines = f.readlines()
+                lines = f.readlines()
 
             with open(self.nginx_config_file, 'w') as out:
                 for line in lines:

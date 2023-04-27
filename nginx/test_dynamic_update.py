@@ -19,66 +19,15 @@ from mockito import mock, when
 source_config_file = 'test_nginx.conf'
 dest_config_file = 'testing_nginx.conf'
 
-class WaitForeverTask:
-    def __init__(self):
-        self.keepRunning = True
-
-    def waitForever(self):
-        while self.keepRunning:
-            time.sleep(1)
-
-@contextlib.contextmanager
-def socket_socket_func(scket):
-    yield scket
-
 class DynamicUpdateTest(unittest.TestCase):
-    def mockedListen(self):
-        result = next(listenResult)
-        if result == -1:
-            t = WaitForeverTask()
-            self.threads.append(t)
-
-            thread = Thread(target=t.waitForever)
-            thread.start()
-            thread.join()
-
     def setUp(self):
         shutil.copyfile(source_config_file, dest_config_file)
-        self.threads = []
 
-    def createMocks(self):
-        listenResult = [None, -1]
-        self.listenIter = iter(listenResult)
-
-
-        self.instance = create_instance_from_args(['', '--listen-host', 'testHost',
-                                                   '--listen-port', '50',
-                                                   '--nginx-config-file', 'testFile'])
-
-        conn = mock()
-        data = [{'shareName': 'share3', 'location': 'test location 3'},
-                {'shareName': 'share4', 'location': 'test location 4'}]
-        when(conn).recv(...).thenReturn(data)
-
-        scket = mock()
-        when(scket).listen().thenReturn(self.mockedListen)
-
-
-        when(scket).accept().thenReturn(('testIp', conn))
-        when(scket).close().thenReturn(None)
-#        when(scket).__enter__().thenReturn(scket)
-#        when(scket).__exit__(...)
-        when(scket).setblocking = False
-        when(scket).fileno = 1
-
-        when(socket).socket(...).thenReturn(lambda: socket_socket_func(scket))
+        self.expectedData = {'share1': '/data/share1/', 'share2': '/data/share2/'}
 
     def tearDown(self):
         if os.path.exists(dest_config_file):
             os.remove(dest_config_file)
-
-        for thread in self.threads:
-            thread.keepRunning = False
 
     def testCreateInstance(self):
         instance = create_instance_from_args()
@@ -108,26 +57,41 @@ class DynamicUpdateTest(unittest.TestCase):
         self.assertEqual(50, instance.listen_port)
         self.assertEqual('testFile', instance.nginx_config_file)
 
-    def test(self):
-        self.createMocks()
+    def testLoadConfig(self):
+        instance = create_instance_from_args(['', '--nginx-config-file', dest_config_file])
+        instance.loadConfig()
+        self.assertData(instance, self.expectedData)
 
-        s = socket.socket('bla', 'bla')
-        print(type(s))
-
+    def testClientConnection(self):
         instance = create_instance_from_args(['', '--nginx-config-file', dest_config_file])
         instance.loadConfig()
         t = Thread(target = instance.listen)
         t.start()
 
-        #wait().at_most(100, SECOND).until(lambda: len(self.threads) > 0)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        address = ('localhost', dynamic_update.DEFAULT_LISTEN_PORT)
+        sock.connect(address)
 
-def test():
-    data = [{'shareName': 'share3', 'location': 'test location 3'},
-            {'shareName': 'share4', 'location': 'test location 4'}]
+        try :
+            data = {'share3': 'test location 3',
+                    'share4': 'test location 4'}
 
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect(('localhost', 5000))
-        s.sendall(pickle.dumps(data))
+            sock.sendall(pickle.dumps(data))
+            wait().at_most(2, SECOND).until(lambda: len(instance.shares) == 4)
+            
+            self.expectedData['share3'] = 'test location 3'
+            self.expectedData['share4'] = 'test location 4'
+            self.assertData(instance, self.expectedData)
+        finally:
+            sock.sendall(b'quit')
+            sock.close()
+
+    def assertData(self, instance, data):
+        self.assertEqual(len(data), len(instance.shares))
+
+        for name, location in data.items():
+            self.assertTrue(name in instance.shares)
+            self.assertEqual(location, instance.shares[name])
 
 if __name__ == '__main__':
     unittest.main()
