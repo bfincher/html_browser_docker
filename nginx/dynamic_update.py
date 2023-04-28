@@ -22,7 +22,6 @@ def loadConfig(config_file):
         match = SHARE_NAME_REGEX.match(line)
         if match:
             share_name = match.group(1)
-            print(f"BKF found {share_name}")
             i += 1
             locationFound = False
             while not locationFound:
@@ -72,11 +71,14 @@ class DynamicUpdate:
 
     def handle_new_share(self, dataStr):
         data_changed = False
-        print(f'BKF dataStr = {dataStr}')
         data = pickle.loads(dataStr)
 
-        print(f'BKF type of data = {type(data)}')
-        print(f'BKF data = {data}')
+        keysToDelete = [key for key in self.shares if key not in data]
+        if keysToDelete:
+            data_changed = True
+            for key in keysToDelete:
+                del self.shares[key]
+
         for name, location in data.items():
             if name in self.shares:
                 if location != self.shares[name]:
@@ -87,7 +89,6 @@ class DynamicUpdate:
                 data_changed = True
 
         if data_changed:
-            tempFile = '/tmp/nginx_config'
             with open(self.nginx_config_file, 'r') as f:
                 lines = f.readlines()
 

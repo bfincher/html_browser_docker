@@ -73,14 +73,23 @@ class DynamicUpdateTest(unittest.TestCase):
         sock.connect(address)
 
         try :
-            data = {'share3': 'test location 3',
-                    'share4': 'test location 4'}
-
-            sock.sendall(pickle.dumps(data))
-            wait().at_most(2, SECOND).until(lambda: len(instance.shares) == 4)
-            
             self.expectedData['share3'] = 'test location 3'
             self.expectedData['share4'] = 'test location 4'
+
+            sock.sendall(pickle.dumps(self.expectedData))
+            wait().at_most(2, SECOND).until(lambda: len(instance.shares) == 4)
+            self.assertData(instance, self.expectedData)
+
+            # change one of the share locations
+            self.expectedData['share1'] = '/new/location/share1'
+            sock.sendall(pickle.dumps(self.expectedData))
+            wait().at_most(2, SECOND).until(lambda: instance.shares['share1'] == '/new/location/share1')
+            self.assertData(instance, self.expectedData)
+
+            # remove one of the shares
+            del self.expectedData['share3']
+            sock.sendall(pickle.dumps(self.expectedData))
+            wait().at_most(2, SECOND).until(lambda: len(instance.shares) == 3)
             self.assertData(instance, self.expectedData)
         finally:
             sock.sendall(b'quit')
@@ -92,6 +101,18 @@ class DynamicUpdateTest(unittest.TestCase):
         for name, location in data.items():
             self.assertTrue(name in instance.shares)
             self.assertEqual(location, instance.shares[name])
+
+        #make sure that the data in the config file is correct
+        fromFile = dynamic_update.loadConfig(dest_config_file)
+        print('BKF data keys = ')
+        for key in data.keys():
+            print(key)
+
+        print('BKF fromFile keys = ')
+        for key in fromFile.keys():
+            print(key)
+
+        self.assertEqual(data, fromFile)
 
 if __name__ == '__main__':
     unittest.main()
