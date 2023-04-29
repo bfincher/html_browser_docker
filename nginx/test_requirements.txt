@@ -1,2 +1,1 @@
 busypie==0.5.1
-mockito==1.4.0

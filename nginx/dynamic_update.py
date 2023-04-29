@@ -9,7 +9,7 @@ DEFAULT_LISTEN_HOST = '0.0.0.0'
 DEFAULT_LISTEN_PORT = 5000
 DEFAULT_NGINX_CONFIG_FILE = '/etc/nginx/conf.d/default.conf'
 
-SHARE_NAME_REGEX = re.compile(r'location download_([ a-zA-Z_0-9-]+)\s+{')
+SHARE_NAME_REGEX = re.compile(r'location /download_([ a-zA-Z_0-9-]+)/\s+{')
 SHARE_LOCATION_REGEX = re.compile(r'alias (.*);')
 
 def loadConfig(config_file):
@@ -93,15 +93,25 @@ class DynamicUpdate:
                 lines = f.readlines()
 
             with open(self.nginx_config_file, 'w') as out:
+                skipLine = False
                 for line in lines:
-                    out.write(f'{line}\n')
+                    if not skipLine:
+                        out.write(line)
+
                     if line.startswith('#BEGIN_DYNAMIC_CONFIG'):
-                        for name, location in self.shares:
-                            out.write(f'    location /download_{name}/ {{\n')
+                        skipLine = True
+                        for name, location in self.shares.items():
+                            if not name.endswith('/'):
+                                name = name + '/'
+                            if not location.endswith('/'):
+                                location = location + '/'
+                            out.write(f'    location /download_{name} {{\n')
                             out.write('        #Only allow internal redirects\n')
                             out.write('        internal;\n')
-                            out.write(f'        alias {location}/;\n')
+                            out.write(f'        alias {location};\n')
                             out.write('    }\n\n')
+                    elif line.startswith('#END_DYNAMIC_CONFIG'):
+                        skipLine = False
 
 
 def create_instance_from_args(args = None):
