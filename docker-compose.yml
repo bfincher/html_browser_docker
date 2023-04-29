@@ -5,7 +5,7 @@ services:
         image: mariadb:10.6
         hostname: ${DB_HOST}
         volumes:
-            - ./db_data:/var/lib/mysql
+            - /Volumes/docker_configs/html_browser/db_data:/var/lib/mysql
         environment:
             - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
             - MYSQL_DATABASE=${DB_NAME}
@@ -40,8 +40,9 @@ services:
         image: bfincher/html_browser:alpine-mysql_${VERSION}
         hostname: htmlbrowser_django
         volumes:
-            - ./config:/config
-            - /Volumes/data1:/data1
+            - /Volumes/docker_configs/html_browser/config:/config
+            - /Volumes/Pictures:/Pictures
+            - /Volumes/Videos:/Videos
             - hbmedia:/hb/media
             - nginx_dynamic_config:/nginx_config
         environment:
