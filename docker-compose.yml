@@ -43,7 +43,7 @@ services:
             - ./config:/config
             - /Volumes/data1:/data1
             - hbmedia:/hb/media
-            - nginx_dynamic_config:/nginx__config
+            - nginx_dynamic_config:/nginx_config
         environment:
             - USERID=1012
             - GROUPID=1012
