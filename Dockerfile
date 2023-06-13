@@ -1,4 +1,4 @@
-from bfincher/alpine-python3:3.17
+from bfincher/alpine-python3:3.18
 
 env PYTHONBUFFERED 1
 arg BRANCH
@@ -12,7 +12,7 @@ run echo "branch = ${BRANCH}" && \
     rm /tmp/hb.tgz && \
     apk add --no-cache py3-pillow && \
     apk add --no-cache --virtual .builddeps git gcc libc-dev linux-headers python3-dev && \
-    pip install --no-cache uwsgi==2.0.20 && \
+    pip install --no-cache uwsgi==2.0.21 && \
     grep -v Pillow requirements.txt | pip install --no-cache -r /dev/stdin && \
     find /usr/local \
         \( -type d -a -name test -o -name tests \) \
